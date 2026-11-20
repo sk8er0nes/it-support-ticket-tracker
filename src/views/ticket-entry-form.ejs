@@ -1,0 +1,44 @@
+<% if (error) { %><p class="alert alert-danger" role="alert"><%= error %></p><% } %>
+<form method="post" action="<%= action %>" class="row g-3">
+  <div class="col-12">
+    <label class="form-label" for="subject">Subject</label>
+    <input class="form-control" id="subject" name="subject" maxlength="150" value="<%= ticket.subject ?? '' %>" required>
+  </div>
+  <div class="col-12">
+    <label class="form-label" for="description">Description</label>
+    <textarea class="form-control" id="description" name="description" rows="4" required><%= ticket.description ?? '' %></textarea>
+  </div>
+  <div class="col-12 col-sm-6">
+    <label class="form-label" for="issue_dateTime">Issue date and time</label>
+    <input class="form-control" type="datetime-local" id="issue_dateTime" name="issue_dateTime"
+           step="1" required value="<%= (ticket.issue_dateTime ?? '').replace(' ', 'T') %>">
+  </div>
+  <% const fields = [
+    ['requester_id', 'Requested by', users.map(row => [row.user_id, row.full_name])],
+    ['assignee_id', 'Assigned to', agents.map(row => [row.user_id, row.full_name])],
+    ['category_id', 'Category', categories.map(row => [row.category_id, row.name])],
+    ['priority', 'Priority', Object.entries(priorities)],
+    ['status', 'Status', Object.entries(statuses)],
+  ]; %>
+  <% for (const [field, label, choices] of fields) { %>
+    <div class="col-12 col-sm-6">
+      <label class="form-label" for="<%= field %>"><%= label %></label>
+      <select class="form-select" id="<%= field %>" name="<%= field %>" required>
+        <option value="">Select an option</option>
+        <% for (const [value, name] of choices) { %>
+          <option value="<%= value %>" <%= String(ticket[field]) === String(value) ? 'selected' : '' %>><%= name %></option>
+        <% } %>
+      </select>
+    </div>
+  <% } %>
+  <div class="col-12">
+    <label class="form-label" for="resolution">Resolution</label>
+    <textarea class="form-control" id="resolution" name="resolution" rows="4"
+              aria-describedby="resolution-help"><%= ticket.resolution ?? '' %></textarea>
+    <div class="form-text" id="resolution-help">Required when saving as Resolved.</div>
+  </div>
+  <div class="col-12 d-flex gap-2">
+    <button class="btn btn-primary" type="submit"><%= submitLabel %></button>
+    <a class="btn btn-outline-secondary" href="/tickets">Back to Tickets</a>
+  </div>
+</form>

@@ -1,0 +1,68 @@
+<h1 class="h2 mb-4">Support Tickets</h1>
+<section class="card border-0 shadow-sm mb-4" aria-labelledby="search-heading">
+  <div class="card-body p-4">
+    <h2 class="h5 mb-3" id="search-heading">Search tickets</h2>
+    <form method="get" action="/tickets" class="row g-3" role="search" aria-labelledby="search-heading">
+      <div class="col-12 col-md-6 col-lg-3">
+        <label class="form-label" for="subject">Subject</label>
+        <input class="form-control" id="subject" name="subject" type="search" maxlength="150" value="<%= filters.subject %>">
+      </div>
+      <% const dropdowns = [
+        ['category_id', 'Category', 'All categories', categories.map(row => [row.category_id, row.name])],
+        ['assignee_id', 'Assigned to', 'All agents', agents.map(row => [row.user_id, row.full_name])],
+        ['status', 'Status', 'All statuses', Object.entries(statuses)],
+      ]; %>
+      <% for (const [field, label, placeholder, choices] of dropdowns) { %>
+        <div class="col-12 col-md-6 col-lg-3">
+          <label class="form-label" for="<%= field %>"><%= label %></label>
+          <select class="form-select" id="<%= field %>" name="<%= field %>">
+            <option value=""><%= placeholder %></option>
+            <% for (const [value, name] of choices) { %>
+              <option value="<%= value %>" <%= filters[field] === String(value) ? 'selected' : '' %>><%= name %></option>
+            <% } %>
+          </select>
+        </div>
+      <% } %>
+      <div class="col-12 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">Search</button>
+        <a class="btn btn-outline-secondary" href="/tickets">Reset</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<div class="table-responsive card border-0 shadow-sm">
+  <table class="table table-hover align-middle mb-0">
+    <caption class="visually-hidden">Ticket search results</caption>
+    <thead class="table-light">
+      <tr>
+        <% for (const column of ['ID', 'Subject', 'Category', 'Assigned to', 'Priority', 'Status', 'Actions']) { %>
+          <th scope="col"><%= column %></th>
+        <% } %>
+      </tr>
+    </thead>
+    <tbody>
+      <% const badge = { open: 'primary', in_progress: 'warning', resolved: 'success', closed: 'secondary', cancelled: 'dark' }; %>
+      <% for (const ticket of tickets) { %>
+        <tr>
+          <th scope="row">#<%= ticket.ticket_id %></th>
+          <td><%= ticket.subject %></td>
+          <td><%= ticket.category %></td>
+          <td><%= ticket.assignee %></td>
+          <td><%= priorities[ticket.priority] %></td>
+          <td><span class="badge text-bg-<%= badge[ticket.status] %>"><%= statuses[ticket.status] %></span></td>
+          <td class="text-nowrap">
+            <a class="btn btn-sm btn-outline-primary" href="/tickets/<%= ticket.ticket_id %>/edit" aria-label="Edit ticket <%= ticket.ticket_id %>">Edit</a>
+            <a class="btn btn-sm btn-outline-danger" href="/tickets/<%= ticket.ticket_id %>/delete" aria-label="Delete ticket <%= ticket.ticket_id %>">Delete</a>
+          </td>
+        </tr>
+      <% } %>
+      <% if (!tickets.length) { %>
+        <tr><td colspan="7" class="text-center text-body-secondary py-4">No tickets match your search.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<div class="mt-4">
+  <a class="btn btn-primary" href="/tickets/new">Add New Ticket</a>
+</div>
