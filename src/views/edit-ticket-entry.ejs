@@ -1,6 +1,6 @@
 <div class="card border-0 shadow-sm mx-auto" style="max-width: 48rem">
   <div class="card-body p-4">
-    <h1 class="h3 mb-4">Edit Ticket #<%= ticket.ticket_id %></h1>
+    <h1 class="h3 mb-4">Edit Support Ticket #<%= ticket.ticket_id %></h1>
     <%- include('ticket-entry-form', { action: '/tickets/' + ticket.ticket_id + '/edit', submitLabel: 'Save Changes' }) %>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <div class="card border-0 shadow-sm mx-auto" style="max-width: 40rem">
   <div class="card-body p-4">
-    <h1 class="h3 mb-3">Delete Ticket #<%= ticket.ticket_id %>?</h1>
+    <h1 class="h3 mb-3">Are you sure you want to delete Ticket #<%= ticket.ticket_id %>?</h1>
     <p><strong><%= ticket.subject %></strong> will be permanently deleted.</p>
     <form method="post" action="/tickets/<%= ticket.ticket_id %>/delete" class="d-flex gap-2">
       <a class="btn btn-outline-secondary" href="/tickets">Back to Tickets</a>

@@ -1,11 +1,9 @@
 const express = require("express");
 const mysql2 = require("mysql2/promise");
 const ejs = require("ejs");
-const expressLayouts = require('express-ejs-layouts');
 const dotenv = require("dotenv");
 
 dotenv.config();
-
 
 const app = express();
 const port = 3000;
